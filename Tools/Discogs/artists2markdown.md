@@ -204,6 +204,14 @@ do
         sed -e 's/^ *//' -e 's/ *$//' -e "s/^\"//" -e "s/\"$//"`
       echo "- [${title}](${disc})" >> /tmp/sa$$
     done
+
+    echo "---" > /tmp/au$$
+    echo "aliases: []" > /tmp/au$$
+    echo "publish: false" > /tmp/au$$
+    echo "tags: [ ]" > /tmp/au$$
+    echo "---" > /tmp/au$$
+    echo "" > /tmp/au$$
+
     echo "# ${artistname}" > /tmp/au$$
     echo "" >> /tmp/au$$
     [ -s "${TOOLS}/json/${release_id}/${release_id}.json" ] && {

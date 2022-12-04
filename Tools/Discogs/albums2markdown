@@ -224,18 +224,14 @@ make_release_markdown() {
       [ "${generate}" ] && {
         label=`cat "json/${releaseid}/${releaseid}.json" | jq -r '.labels[].name'`
 
-        echo "---" > "${markdown}"
-        echo "title: ${title}" >> "${markdown}"
-        echo "artist: ${artist}" >> "${markdown}"
-        echo "label: ${label}" >> "${markdown}"
-
+        
+        # Insert format data for this album
         formats=`cat "json/${releaseid}/${releaseid}.json" | \
                  jq -r '.formats[]?' | jq -r '.name'`
         cat "json/${releaseid}/${releaseid}.json" | \
                  jq -r '.formats[]?' | \
                  jq -r '.descriptions[]?' > "${releaseid}_formats.txt"
 
-        # Insert format data for this album
         while read format
         do
           [ "${format}" == "null" ] && format=
@@ -243,8 +239,7 @@ make_release_markdown() {
           formats="${formats}, ${format}"
         done < <(/bin/cat "${releaseid}_formats.txt")
         rm -f ${releaseid}_formats.txt
-        echo "formats: ${formats}" >> "${markdown}"
-
+      
         # Insert genre/styles data for this album
         first=1
         genres=
@@ -269,15 +264,13 @@ make_release_markdown() {
           [ "${style}" ] || continue
           genres="${genres}, ${style}"
         done < <(/bin/cat "json/${releaseid}/${releaseid}_styles.json")
-        echo "genres: ${genres}" >> "${markdown}"
+
 
         rating=`cat "json/${releaseid}/${releaseid}.json" | \
           jq '.community.rating.average'`
-        echo "rating: ${rating}" >> "${markdown}"
 
         released=`cat "json/${releaseid}/${releaseid}.json" | \
           jq -r '.released'`
-        echo "released: ${released}" >> "${markdown}"
 
         # Get year from master release if there is one, otherwise use year of release
         year=
@@ -311,9 +304,7 @@ make_release_markdown() {
         [ "${year}" ] || {
           year=`cat "json/${releaseid}/${releaseid}.json" | jq -r '.year'`
         }
-        echo "year: ${year}" >> "${markdown}"
 
-        echo "releaseid: ${releaseid}" >> "${markdown}"
 
         # TODO: loop through custom fields, get name of field, get value
 
@@ -336,11 +327,23 @@ make_release_markdown() {
         # }
 
         # These are the custom collection fields for my collection
+        echo "---" > "${markdown}"
+        echo "artist: ${artist}" >> "${markdown}"
+        echo "formats: ${formats}" >> "${markdown}"
+        echo "genres: ${genres}" >> "${markdown}"
+        echo "label: ${label}" >> "${markdown}"
         echo "mediacondition: ${mediacondition}" >> "${markdown}"
+        echo "notes: ${notes}" >> "${markdown}"
+        echo "publish: false" >> "${markdown}"
+        echo "rating: ${rating}" >> "${markdown}"
+        echo "released: ${released}" >> "${markdown}"
+        echo "releaseid: ${releaseid}" >> "${markdown}"
         echo "sleevecondition: ${sleevecondition}" >> "${markdown}"
         echo "speed: ${speed}" >> "${markdown}"
+        echo "tags: []">> "${markdown}"
+        echo "title: ${title}" >> "${markdown}"
         echo "weight: ${weight}" >> "${markdown}"
-        echo "notes: ${notes}" >> "${markdown}"
+        echo "year: ${year}" >> "${markdown}"
         echo "---" >> "${markdown}"
         echo "" >> "${markdown}"
 

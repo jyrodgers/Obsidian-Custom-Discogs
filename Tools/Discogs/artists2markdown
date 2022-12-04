@@ -143,6 +143,12 @@ echo "Please be patient. A large Discogs collection or library may take a while.
 
 [ -f "${OUT}" ] || {
   mkartists=1
+  echo "---" > "${OUT}"
+  echo "aliases: []" > "${OUT}"
+  echo "publish: false" > "${OUT}"
+  echo "tags: [ ]" > "${OUT}"
+  echo "---" > "${OUT}"
+
   echo "# Artists" > "${OUT}"
   echo "" >> "${OUT}"
   echo "## Artists in ${VAULT}" >> "${OUT}"
@@ -201,6 +207,13 @@ do
         sed -e 's/^ *//' -e 's/ *$//' -e "s/^\"//" -e "s/\"$//"`
       echo "- [${title}](${disc})" >> /tmp/sa$$
     done
+
+    echo "---" > /tmp/au$$
+    echo "aliases: []" > /tmp/au$$
+    echo "publish: false" > /tmp/au$$
+    echo "tags: [ ]" > /tmp/au$$
+    echo "---" > /tmp/au$$
+
     echo "# ${artistname}" > /tmp/au$$
     echo "" >> /tmp/au$$
     [ -s "${TOOLS}/json/${release_id}/${release_id}.json" ] && {
